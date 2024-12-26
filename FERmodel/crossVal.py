@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """
-This is an executable script for training a deep learning model called "fusionet" to predict 
-"retinal equivalent refraction" from fundus images and OCT B-scans
+This is an executable script for cross-validating and training a deep learning model 
+called "fusionet" to predict fundus equivalent refraction from fundus images.
 
 Author : Fabian Yii
 Email  : fabian.yii@ed.ac.uk or fslyii@hotmail.com
@@ -271,12 +271,3 @@ for i in trange(0, bestEpoch, desc = "Total number of training epochs") :
     torch.save(model.state_dict(), join(args.weightsDir, "bestEpochWeights.pth"))
 
 
-
-
-
-
-
-
-
-
-        
