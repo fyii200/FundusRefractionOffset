@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-This is an executable script for training and cross-valiating the model for pathologic myopia detection.
+This is an executable script for cross-valiating and training the model for pathologic myopia detection.
 
 Author : Fabian Yii
 Email  : fabian.yii@ed.ac.uk or fslyii@hotmail.com
