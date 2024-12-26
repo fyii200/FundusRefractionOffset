@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-This is an executable script for applying the trained "fusionet" at inference time
+This is an executable script for applying the trained "fusionet" to external (non-UK Biobank) data at inference time
 
 Author : Fabian Yii
 Email  : fabian.yii@ed.ac.uk or fslyii@hotmail.com
