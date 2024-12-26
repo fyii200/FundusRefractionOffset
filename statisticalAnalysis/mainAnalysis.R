@@ -26,7 +26,7 @@ setwd("..")
 ## Read data and compute fundus refraction offset (FRO) ##
 
 # UK Biobank cross-validation data
-trainMetrics         <- read.csv(file.path("code", "RERmodel", "metrics", "CrossVal.csv"))
+trainMetrics         <- read.csv(file.path("code", "FERmodel", "metrics", "CrossVal.csv"))
 epochLosses          <- trainMetrics %>% group_by(epoch) %>%  summarise(epochLoss = mean(valEpochLoss)) 
 bestEpoch            <- which(epochLosses$epochLoss == min(epochLosses$epochLoss)); print(paste("Best epoch:", bestEpoch))
 
@@ -56,62 +56,62 @@ train$type           <- "Train"
 test$type            <- "Test"
 
 # Merge participant and FER data
-RERdata              <- rbind(train, test)
-RERdata              <- merge(RERdata, d, by = "name" )
-RERdata$type         <- factor(RERdata$type, c("Train", "Test"))
+FERdata              <- rbind(train, test)
+FERdata              <- merge(FERdata, d, by = "name" )
+FERdata$type         <- factor(FERdata$type, c("Train", "Test"))
 
 # UK Biobank MT distribution before OCT quality control
-ggplot(subset(RERdata, type == "Test"), aes(x = overall_macular_thickness_baseline)) + 
+ggplot(subset(FERdata, type == "Test"), aes(x = overall_macular_thickness_baseline)) + 
   labs(x = "Overall macular thickness (µm)", y = "Frequency") +
   geom_histogram(bins = 200, fill = "red") + 
   theme_blank()
 ggsave(file.path("manuscript", "figures", "supplementary", "MTdist.png"), width = 7, height = 5)
 
 # Exclude eyes failing OCT quality control
-excludeTestIds <- which(RERdata$type == "Test" & !RERdata$OCTgoodQualityBool)
-RERdata        <- RERdata[-excludeTestIds,] 
+excludeTestIds <- which(FERdata$type == "Test" & !FERdata$OCTgoodQualityBool)
+FERdata        <- FERdata[-excludeTestIds,] 
 
 # Eye-specific Pearson's correlation (FER vs SER)
 for(eye in c("RE", "LE")){
-  print(cor.test(subset(RERdata, type == "Train" & eye == eye)$trueSER, subset(RERdata, type == "Train" &  eye == eye)$predSER))
-  print(cor.test(subset(RERdata, type == "Test" &  eye == eye)$trueSER, subset(RERdata, type == "Test" &  eye == eye)$predSER_TTA)) }
+  print(cor.test(subset(FERdata, type == "Train" & eye == eye)$trueSER, subset(FERdata, type == "Train" &  eye == eye)$predSER))
+  print(cor.test(subset(FERdata, type == "Test" &  eye == eye)$trueSER, subset(FERdata, type == "Test" &  eye == eye)$predSER_TTA)) }
 
 # Compute FRO for the UK Biobank unseen set
-RERtest          <- subset(RERdata, type == "Test")
-RERtestModel     <- lmer(predSER_TTA ~ trueSER + (1 | id), RERtest)
-RERtest$FRO      <- residuals(RERtestModel)
+FERtest          <- subset(FERdata, type == "Test")
+FERtestModel     <- lmer(predSER_TTA ~ trueSER + (1 | id), FERtest)
+FERtest$FRO      <- residuals(FERtestModel)
 
 ## Associations of FRO with macular thickness (MT) ##
 
 # Overall
-tab_model(lmer(overall_macular_thickness_baseline ~ trueSER + FRO + age + sex + ethnicBinary + (1|id), RERtest))
+tab_model(lmer(overall_macular_thickness_baseline ~ trueSER + FRO + age + sex + ethnicBinary + (1|id), FERtest))
 
 # Central
-tab_model(lmer(central_macular_thickness_baseline ~ trueSER + FRO + age + sex + ethnicBinary + (1|id), RERtest))
+tab_model(lmer(central_macular_thickness_baseline ~ trueSER + FRO + age + sex + ethnicBinary + (1|id), FERtest))
 
 # Inner temporal
-tab_model(lmer(innerTemporal_macular_thickness_baseline ~ trueSER + FRO + age + sex + ethnicBinary + (1|id), RERtest))
+tab_model(lmer(innerTemporal_macular_thickness_baseline ~ trueSER + FRO + age + sex + ethnicBinary + (1|id), FERtest))
 
 # Inner inferior
-tab_model(lmer(innerInferior_macular_thickness_baseline ~ trueSER + FRO + age + sex + ethnicBinary + (1|id), RERtest))
+tab_model(lmer(innerInferior_macular_thickness_baseline ~ trueSER + FRO + age + sex + ethnicBinary + (1|id), FERtest))
 
 # Inner nasal
-tab_model(lmer(innerNasal_macular_thickness_baseline ~ trueSER + FRO + age + sex + ethnicBinary + (1|id), RERtest))
+tab_model(lmer(innerNasal_macular_thickness_baseline ~ trueSER + FRO + age + sex + ethnicBinary + (1|id), FERtest))
 
 # Inner superior
-tab_model(lmer(innerSuperior_macular_thickness_baseline ~ trueSER + FRO + age + sex + ethnicBinary + (1|id), RERtest))
+tab_model(lmer(innerSuperior_macular_thickness_baseline ~ trueSER + FRO + age + sex + ethnicBinary + (1|id), FERtest))
 
 # Outer temporal
-tab_model(lmer(outerTemporal_macular_thickness_baseline ~ trueSER + FRO + age + sex + ethnicBinary + (1|id), RERtest))
+tab_model(lmer(outerTemporal_macular_thickness_baseline ~ trueSER + FRO + age + sex + ethnicBinary + (1|id), FERtest))
 
 # Outer inferior
-tab_model(lmer(outerInferior_macular_thickness_baseline ~ trueSER + FRO + age + sex + ethnicBinary + (1|id), RERtest))
+tab_model(lmer(outerInferior_macular_thickness_baseline ~ trueSER + FRO + age + sex + ethnicBinary + (1|id), FERtest))
 
 # Outer nasal
-tab_model(lmer(outerNasal_macular_thickness_baseline ~ trueSER + FRO + age + sex + ethnicBinary + (1|id), RERtest))
+tab_model(lmer(outerNasal_macular_thickness_baseline ~ trueSER + FRO + age + sex + ethnicBinary + (1|id), FERtest))
 
 # Outer superior
-tab_model(lmer(outerSuperior_macular_thickness_baseline ~ trueSER + FRO + age + sex + ethnicBinary + (1|id), RERtest))
+tab_model(lmer(outerSuperior_macular_thickness_baseline ~ trueSER + FRO + age + sex + ethnicBinary + (1|id), FERtest))
 
 
 
@@ -214,23 +214,23 @@ tab_model(lm(meanChoroidVascularity ~ meanAL + FRO + ageFundus + gender + ethnic
 CB <- brewer.pal(11, "RdYlBu")
 
 # Set-up: create new dataframe for plotting purposes
-RERtest[RERtest$ethnicBinary == "non-White",]$ethnicBinary <- "Non-white"
-RERtest$FROclass                                           <- ifelse(RERtest$FRO <= 0, "—", "+")
-RERtest$SERclass                                           <- ifelse(RERtest$SER <= -0.50, "Myopia", "Non-myopia")
-RERtest$ageGroup                                           <- "50-59y" 
-RERtest[RERtest$age <= 49, ]$ageGroup                      <- "40-49y"
-RERtest[RERtest$age >= 60, ]$ageGroup                      <- "60-70y"
-plotData <- data.frame("data"       = c(rep("UK Biobank", nrow(RERtest)), rep("Caledonian", nrow(pred))), 
-                       "MT"         = c(RERtest$overall_macular_thickness_baseline, pred$overallMT), 
-                       "sex"        = c(RERtest$sex, pred$gender),
-                       "ethnic"     = c(RERtest$ethnicBinary, pred$ethnicBinary), 
-                       "ageGroup"   = c(RERtest$ageGroup, rep(" ", nrow(pred)) ), 
-                       "ALquantile" = c(rep(NA, nrow(RERtest)), pred$ALquantile),
-                       "FROclass"   = c(RERtest$FROclass, pred$FROclass), 
-                       "SERclass"   = c(RERtest$SERclass, pred$SERclass))
+FERtest[FERtest$ethnicBinary == "non-White",]$ethnicBinary <- "Non-white"
+FERtest$FROclass                                           <- ifelse(FERtest$FRO <= 0, "—", "+")
+FERtest$SERclass                                           <- ifelse(FERtest$SER <= -0.50, "Myopia", "Non-myopia")
+FERtest$ageGroup                                           <- "50-59y" 
+FERtest[FERtest$age <= 49, ]$ageGroup                      <- "40-49y"
+FERtest[FERtest$age >= 60, ]$ageGroup                      <- "60-70y"
+plotData <- data.frame("data"       = c(rep("UK Biobank", nrow(FERtest)), rep("Caledonian", nrow(pred))), 
+                       "MT"         = c(FERtest$overall_macular_thickness_baseline, pred$overallMT), 
+                       "sex"        = c(FERtest$sex, pred$gender),
+                       "ethnic"     = c(FERtest$ethnicBinary, pred$ethnicBinary), 
+                       "ageGroup"   = c(FERtest$ageGroup, rep(" ", nrow(pred)) ), 
+                       "ALquantile" = c(rep(NA, nrow(FERtest)), pred$ALquantile),
+                       "FROclass"   = c(FERtest$FROclass, pred$FROclass), 
+                       "SERclass"   = c(FERtest$SERclass, pred$SERclass))
 
 # UK Biobank train set: FER vs SER
-trainPlot <- ggplot(subset(RERdata, type == "Train"), aes(x = trueSER, y = predSER)) + 
+trainPlot <- ggplot(subset(FERdata, type == "Train"), aes(x = trueSER, y = predSER)) + 
              geom_point(col = "gray", alpha = 0.6) + 
              geom_smooth(method = "lm", col = "black") +
              labs(x = "", y = "", caption = "UK Biobank train set")  +
@@ -245,7 +245,7 @@ trainPlot <- ggplot(subset(RERdata, type == "Train"), aes(x = trueSER, y = predS
 ggsave(file.path("manuscript", "figures", "figure1_train.png"), plot = trainPlot, width = 6, height = 8)
 
 # UK Biobank (internal) unseen set: FER vs SER
-internalTestPlot <- ggplot(RERtest, aes(x = trueSER, y = predSER, col = FROclass)) + 
+internalTestPlot <- ggplot(FERtest, aes(x = trueSER, y = predSER, col = FROclass)) + 
                     geom_point(alpha = 0.4) + 
                     scale_colour_manual(values = c(CB[3], CB[9])) +
                     geom_smooth(method = "lm", col = "black") +
@@ -280,14 +280,14 @@ externalTestPlot <- ggplot(pred, aes(x = SER, y = predSER_TTA, col = FROclass)) 
 ggsave(file.path("manuscript", "figures", "figure1_external.png"), plot = externalTestPlot, width = 6, height = 4)
 
 # UK Biobank unseen set: MT distribution (post-OCT quality control)
-ggplot(subset(RERdata, type == "Test"), aes(x = overall_macular_thickness_baseline)) + 
+ggplot(subset(FERdata, type == "Test"), aes(x = overall_macular_thickness_baseline)) + 
   labs(x = "Overall macular thickness (µm)", y = "Frequency") +
   geom_histogram(bins = 200, fill = "red") + 
   theme_blank()
 ggsave(file.path("manuscript", "figures", "supplementary", "MTdistQC.png"), width  = 7, height = 5)
 
 # UK Biobank unseen set: FRO distribution
-ggplot(RERtest, aes(x = FRO)) + 
+ggplot(FERtest, aes(x = FRO)) + 
   geom_histogram(col = "gray", fill = "gray88") + 
   labs(x = "\nFundus refraction offset (D)", y = "Frequency\n", subtitle = "UK Biobank") +
   theme_blank() + 
