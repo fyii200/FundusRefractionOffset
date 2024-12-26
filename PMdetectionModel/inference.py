@@ -1,3 +1,13 @@
+#!/usr/bin/env python
+"""
+This is an executable script for applying the trained model at inference time.
+
+Author : Fabian Yii
+Email  : fabian.yii@ed.ac.uk or fslyii@hotmail.com
+
+2024
+"""
+
 import os
 import torch
 import argparse
