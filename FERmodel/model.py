@@ -1,6 +1,6 @@
 """
-This script defines the "fusionet" class, a model that uses both fundus images and 
-OCT B-scans as inputs, with two ResNet-18 backbones fused through two fully connected layers
+This script defines the "fusionet" class, a deep learning model with one ResNet-18 backbone, if "fusion" is False,
+or two ResNet-18 backbones fused through two fully connected layers, if "fusion" is True.
 
 Author : Fabian Yii
 Email  : fabian.yii@ed.ac.uk or fslyii@hotmail.com
