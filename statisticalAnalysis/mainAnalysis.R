@@ -49,9 +49,9 @@ d$OCTgoodQualityBool <- d$OCT_quality_score                >= 45                
                         d$OCT_valid_count_baseline         > quantile(d$OCT_valid_count_baseline, lowerQ, na.rm=TRUE)
 
 # UK Biobank fundus equivalent refraction (FER) data
-train                <- read.csv(file.path("output", "RERtrainPrediction.csv"))
+train                <- read.csv(file.path("output", "FERtrainPrediction.csv"))
 train$predSER_TTA    <- NA
-test                 <- read.csv(file.path("output", "RERtestPrediction.csv"))
+test                 <- read.csv(file.path("output", "FERtestPrediction.csv"))
 train$type           <- "Train"
 test$type            <- "Test"
 
