@@ -65,7 +65,7 @@ ggplot(subset(RERdata, type == "Test"), aes(x = overall_macular_thickness_baseli
   labs(x = "Overall macular thickness (µm)", y = "Frequency") +
   geom_histogram(bins = 200, fill = "red") + 
   theme_blank()
-ggsave(file.path("manuscript", "figures", "MTdist.png"), width = 7, height = 5)
+ggsave(file.path("manuscript", "figures", "supplementary", "MTdist.png"), width = 7, height = 5)
 
 # Exclude eyes failing OCT quality control
 excludeTestIds <- which(RERdata$type == "Test" & !RERdata$OCTgoodQualityBool)
@@ -154,7 +154,7 @@ cor.test(pred$SER, pred$predSER_TTA)
 # Compute FRO
 m               <- lm(predSER_TTA ~ SER, pred); tab_model(m)
 pred$FRO        <- residuals(m)
-pred$FROclass   <- ifelse(pred$FRO < 0 , "-", "+")
+pred$FROclass   <- ifelse(pred$FRO < 0 , "—", "+")
 
 ## Associations of FRO with MT, CA & CVI (controlling for SER and then AL) ##
 
@@ -242,7 +242,7 @@ trainPlot <- ggplot(subset(RERdata, type == "Train"), aes(x = trueSER, y = predS
                    panel.background = element_blank(),
                    panel.grid.major = element_blank(),
                    panel.grid.minor = element_blank()) 
-ggsave(file.path("manuscript", "figures", "train.png"), plot = trainPlot, width = 6, height = 8)
+ggsave(file.path("manuscript", "figures", "figure1_train.png"), plot = trainPlot, width = 6, height = 8)
 
 # UK Biobank (internal) unseen set: FER vs SER
 internalTestPlot <- ggplot(RERtest, aes(x = trueSER, y = predSER, col = FROclass)) + 
@@ -260,7 +260,7 @@ internalTestPlot <- ggplot(RERtest, aes(x = trueSER, y = predSER, col = FROclass
                           panel.background = element_blank(),
                           panel.grid.major = element_blank(),
                           panel.grid.minor = element_blank()) 
-ggsave(file.path("manuscript", "figures", "internalTest.png"), plot = internalTestPlot, width = 6, height = 4)
+ggsave(file.path("manuscript", "figures", "figure1_internalUnseen.png"), plot = internalTestPlot, width = 6, height = 4)
 
 # Caledonian (external) dataset: FER vs SER
 externalTestPlot <- ggplot(pred, aes(x = SER, y = predSER_TTA, col = FROclass)) + 
@@ -277,14 +277,14 @@ externalTestPlot <- ggplot(pred, aes(x = SER, y = predSER_TTA, col = FROclass)) 
                           panel.background = element_blank(),
                           panel.grid.major = element_blank(),
                           panel.grid.minor = element_blank()) 
-ggsave(file.path("manuscript", "figures", "externalTest.png"), plot = externalTestPlot, width = 6, height = 4)
+ggsave(file.path("manuscript", "figures", "figure1_external.png"), plot = externalTestPlot, width = 6, height = 4)
 
 # UK Biobank unseen set: MT distribution (post-OCT quality control)
 ggplot(subset(RERdata, type == "Test"), aes(x = overall_macular_thickness_baseline)) + 
   labs(x = "Overall macular thickness (µm)", y = "Frequency") +
   geom_histogram(bins = 200, fill = "red") + 
   theme_blank()
-ggsave(file.path("manuscript", "figures", "MTdistQC.png"), width  = 7, height = 5)
+ggsave(file.path("manuscript", "figures", "supplementary", "MTdistQC.png"), width  = 7, height = 5)
 
 # UK Biobank unseen set: FRO distribution
 ggplot(RERtest, aes(x = FRO)) + 
@@ -292,7 +292,7 @@ ggplot(RERtest, aes(x = FRO)) +
   labs(x = "\nFundus refraction offset (D)", y = "Frequency\n", subtitle = "UK Biobank") +
   theme_blank() + 
   theme(axis.line = element_blank())
-ggsave(file.path("manuscript", "figures", "FROdistUKbiobank.png"), width = 4, height = 4)
+ggsave(file.path("manuscript", "figures", "supplementary", "FROdistUKbiobank.png"), width = 4, height = 4)
 
 # Caledonian dataset: MT distribution
 ggplot(pred, aes(x = overallMT)) + 
@@ -300,7 +300,7 @@ ggplot(pred, aes(x = overallMT)) +
   geom_histogram(bins = 20, col = "transparent") + 
   scale_x_continuous(breaks = seq(250, 315, 5), labels = seq(250, 315, 5)) +
   theme_blank()
-ggsave(file.path("manuscript", "figures", "MTdistGCU.png"), width = 7, height = 5, dpi = 300)
+ggsave(file.path("manuscript", "figures", "supplementary", "MTdistGCU.png"), width = 7, height = 5, dpi = 300)
 
 # Caledonian dataset: CA distribution
 ggplot(pred, aes(x = meanChoroidArea)) + 
@@ -308,7 +308,7 @@ ggplot(pred, aes(x = meanChoroidArea)) +
   geom_histogram(bins = 20, col = "transparent") + 
   scale_x_continuous(breaks = seq(0.2, 2, 0.2), labels = format(seq(0.2, 2, 0.2),nsmall=2) ) +
   theme_blank()
-ggsave(file.path("manuscript", "figures", "CAdistGCU.png"), width = 7, height = 5, dpi = 300)
+ggsave(file.path("manuscript", "figures", "supplementary", "CAdistGCU.png"), width = 7, height = 5, dpi = 300)
 
 # Caledonian dataset: CVI distribution
 ggplot(pred, aes(x = meanChoroidVascularity)) + 
@@ -316,14 +316,14 @@ ggplot(pred, aes(x = meanChoroidVascularity)) +
   geom_histogram(bins = 20, col = "transparent") + 
   scale_x_continuous(breaks = seq(0.3, 0.6, 0.05), labels = seq(0.3, 0.6, 0.05)) +
   theme_blank()
-ggsave(file.path("manuscript", "figures", "CVIdistGCU.png"), width = 7, height = 5, dpi = 300)
+ggsave(file.path("manuscript", "figures", "supplementary", "CVIdistGCU.png"), width = 7, height = 5, dpi = 300)
 
 # Caledonian dataset: FRO distribution
 ggplot(pred, aes(x = FRO)) + 
   geom_histogram(col = "gray", fill = "gray88") + 
   labs(x = "\nFundus refraction offset (D)", y = "", subtitle = "Caledonian") +
   theme_blank() 
-ggsave(file.path("manuscript", "figures", "FROdistGCU.png"), width = 4, height = 4)
+ggsave(file.path("manuscript", "figures", "supplementary", "FROdistGCU.png"), width = 4, height = 4)
 
 # UK Biobank unseen set and Caledonian dataset: MT vs FRO 
 # Stratified by refractive error (MTplotA) and AL (MTplotB)
@@ -331,6 +331,8 @@ MTplotA    <- ggplot(plotData, aes(x = SERclass, y = MT, fill = FROclass, col = 
               geom_boxplot(alpha = 0.4) +
               labs(x = "", y = "") +
               scale_y_continuous(limits=c(215, 356), breaks = seq(215,356,20), labels = seq(215,356,20)) +
+              scale_color_manual(values = c(CB[3], CB[9])) +
+              scale_fill_manual(values = c(CB[3], CB[9])) +
               facet_grid( ~ factor(data, c("UK Biobank", "Caledonian")) + ageGroup) +
               theme_blank() +
               theme(legend.position = "none", 
@@ -340,6 +342,8 @@ MTplotA    <- ggplot(plotData, aes(x = SERclass, y = MT, fill = FROclass, col = 
 MTplotB    <- ggplot(pred, aes(x = ALquantile, y = overallMT, fill = FROclass, col = FROclass)) + 
               labs(x = "", y = "") +
               scale_y_continuous(limits=c(250, 312), breaks = seq(250,315,15), labels = seq(250,315,15)) +
+              scale_color_manual(values = c(CB[3], CB[9])) +
+              scale_fill_manual(values = c(CB[3], CB[9])) +
               guides(fill = guide_legend(title = "Fundus refraction offset"), col  = guide_legend(title = "Fundus refraction offset")) +
               geom_boxplot(alpha = 0.4) +
               theme_blank() +
@@ -349,8 +353,8 @@ MTplotB    <- ggplot(pred, aes(x = ALquantile, y = overallMT, fill = FROclass, c
                     legend.key.size = unit(1, "cm"),
                     axis.ticks.y    = element_line(color = "black"), 
                     axis.text       = element_text(size  = 11)) 
-MTcombined <- grid.arrange(UKbiobankMT, caledonianMT, ncol = 1, nrow = 2, left = textGrob("Overall macular thickness (µm)", rot = 90, gp = gpar(fontsize = 20)))
-ggsave(file.path("manuscript", "figures", "MTpre.png"), plot = MTcombined, width = 8.5, height = 12)
+MTcombined <- grid.arrange(MTplotA, MTplotB, ncol = 1, nrow = 2, left = textGrob("Overall macular thickness (µm)", rot = 90, gp = gpar(fontsize = 20)))
+ggsave(file.path("manuscript", "figures", "figure2pre.png"), plot = MTcombined, width = 8.5, height = 12)
 
 # UK Biobank unseen set and Caledonian dataset: CVI vs FRO 
 # Stratified by refractive error (CVIplotA) and AL (CVIplotB)
@@ -358,6 +362,8 @@ CVIplotA    <- ggplot(pred) +
                theme_blank() + 
                labs(x = "", y = "") +
                scale_y_continuous(limits=c(0.35, 0.60), breaks = seq(0.35, 0.60, 0.05), labels = label_number(accuracy = 0.01)) +
+               scale_color_manual(values = c(CB[3], CB[9])) +
+               scale_fill_manual(values = c(CB[3], CB[9])) +
                geom_boxplot(aes(x = SERclass, y = meanChoroidVascularity, fill = FROclass, col = FROclass), alpha=0.4) + 
                theme(legend.position = "none", axis.ticks.y = element_line(color = "black"))
 CVIplotB    <- ggplot(pred, aes(x = ALquantile, y = meanChoroidVascularity, fill = FROclass, col = FROclass)) + 
@@ -365,12 +371,11 @@ CVIplotB    <- ggplot(pred, aes(x = ALquantile, y = meanChoroidVascularity, fill
                geom_boxplot(alpha = 0.4) + 
                guides(fill = guide_legend(title = "Fundus\nrefraction\noffset"), col  = guide_legend(title = "Fundus\nrefraction\noffset")) +
                scale_y_continuous(limits=c(0.35, 0.60)) +
+               scale_color_manual(values = c(CB[3], CB[9])) +
+               scale_fill_manual(values = c(CB[3], CB[9])) +
                labs(x = "", y = "") +
                geom_smooth(method = "lm", alpha = 0.1) +
                theme(axis.text.y = element_blank(), legend.position = "left")
 CVIcombined <- grid.arrange(CVIplotA, CVIplotB, ncol = 2, nrow = 1, widths = c(0.45, 0.55), left = textGrob("Choroidal vascularity index", rot = 90, gp = gpar(fontsize = 16)))
-ggsave(file.path("manuscript", "figures", "CVIpre.png"), plot = CVIcombined, width = 14, height = 7)
-
-
-
+ggsave(file.path("manuscript", "figures", "figure3pre.png"), plot = CVIcombined, width = 14, height = 7)
 
