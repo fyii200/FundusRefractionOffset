@@ -1,5 +1,5 @@
 """
-This script is used to initialise ResNet18 and the trained model used at inference time.
+This script is used to initialise a vanilla ResNet18 class during training or trainedModel at inference time.
 
 Author : Fabian Yii
 Email  : fabian.yii@ed.ac.uk or fslyii@hotmail.com
