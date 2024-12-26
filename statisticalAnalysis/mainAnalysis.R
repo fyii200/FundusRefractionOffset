@@ -33,12 +33,12 @@ bestEpoch            <- which(epochLosses$epochLoss == min(epochLosses$epochLoss
 # UK Biobank full participant data
 d                    <- read.csv(file.path("data", "finalData.csv"))
 
-# Create a binary OCT quality variable
-upperQ               <- 0.95
-lowerQ               <- 0.05
-d$OCTgoodQualityBool <- d$OCT_quality_score >= 45                                                                             & 
-                        d$OCT_ILM_indicator_baseline < quantile(d$OCT_ILM_indicator_baseline, upperQ, na.rm=TRUE)             & 
-                        d$OCT_ILM_indicator_baseline > quantile(d$OCT_ILM_indicator_baseline, lowerQ, na.rm=TRUE)             & 
+# Create a binary indicator for OCT quality
+upperQ               <- 0.95 # upper quantile
+lowerQ               <- 0.05 # lower quantile
+d$OCTgoodQualityBool <- d$OCT_quality_score                >= 45                                                              & 
+                        d$OCT_ILM_indicator_baseline       < quantile(d$OCT_ILM_indicator_baseline, upperQ, na.rm=TRUE)       & 
+                        d$OCT_ILM_indicator_baseline       > quantile(d$OCT_ILM_indicator_baseline, lowerQ, na.rm=TRUE)       & 
                         d$OCT_macula_centre_aline_baseline < quantile(d$OCT_macula_centre_aline_baseline, upperQ, na.rm=TRUE) & 
                         d$OCT_macula_centre_aline_baseline > quantile(d$OCT_macula_centre_aline_baseline, lowerQ, na.rm=TRUE) &
                         d$OCT_macula_centre_frame_baseline < quantile(d$OCT_macula_centre_frame_baseline, upperQ, na.rm=TRUE) & 
@@ -65,9 +65,9 @@ ggplot(subset(RERdata, type == "Test"), aes(x = overall_macular_thickness_baseli
   labs(x = "Overall macular thickness (µm)", y = "Frequency") +
   geom_histogram(bins = 200, fill = "red") + 
   theme_blank()
-ggsave(file.path("manuscript", "figures", "MTdist.png"), width = 7, height = 5, dpi = 300)
+ggsave(file.path("manuscript", "figures", "MTdist.png"), width = 7, height = 5)
 
-# Exclude eyes with poor-quality OCT scans
+# Exclude eyes failing OCT quality control
 excludeTestIds <- which(RERdata$type == "Test" & !RERdata$OCTgoodQualityBool)
 RERdata        <- RERdata[-excludeTestIds,] 
 
@@ -76,7 +76,7 @@ for(eye in c("RE", "LE")){
   print(cor.test(subset(RERdata, type == "Train" & eye == eye)$trueSER, subset(RERdata, type == "Train" &  eye == eye)$predSER))
   print(cor.test(subset(RERdata, type == "Test" &  eye == eye)$trueSER, subset(RERdata, type == "Test" &  eye == eye)$predSER_TTA)) }
 
-# FRO (UK Biobank unseen set)
+# Compute FRO for the UK Biobank unseen set
 RERtest          <- subset(RERdata, type == "Test")
 RERtestModel     <- lmer(predSER_TTA ~ trueSER + (1 | id), RERtest)
 RERtest$FRO      <- residuals(RERtestModel)
@@ -117,18 +117,18 @@ tab_model(lmer(outerSuperior_macular_thickness_baseline ~ trueSER + FRO + age + 
 
 ############## Caledonian (external dataset) ############
 
-## Read data and compute FRO ##
+## Read relevant data and compute FRO ##
 
-# Fundus equivalent refraction (FER) data 
+# Read FER data 
 pred    <- read.csv(file.path("output", "SCOOBI_FER.csv"))             
 
-# Groundtruth (SER) data
+# Read groundtruth (SER) data
 GT      <- read.csv(file.path("SCOOBI", "data", "SCOOBIdataLong.csv")) 
 
-# Choroid data
+# Read choroid data
 choroid <- read.csv(file.path("SCOOBI", "data", "choroid.csv"))        
 
-# Merge data
+# Merge dataframes
 pred$ID <- NA
 for(i in 1:nrow(pred)){
   splitName    <- str_split(pred$name[i], "_")[[1]]
@@ -137,12 +137,12 @@ pred           <- merge(GT, pred, by = "ID")
 pred           <- merge(pred, choroid, all.x = TRUE, by ="ID")
 pred           <- subset(pred, !is.na(SER) & cyclo == TRUE & eye == "RE")
 
-# Bin SER and axial length
+# Binarise SER (myopia vs non-myopia) and bin axial length (quintiles)
 pred$SERclass           <- ifelse(pred$SER <= -0.50, "Myopia", "Non-myopia")
 pred$ALquantile         <- factor(as.numeric(cut_number(pred$meanAL, 5)))
 levels(pred$ALquantile) <- c("20.7 - 22.8 mm", "22.9 - 23.4 mm", "23.5 - 23.9 mm", "24.0 - 24.4 mm", "24.5 - 27.3 mm")
 
-# Compute overall macular thickness (MT)
+# Compute overall MT
 pred$overallMT    <- (pred$MT_central + pred$MT_IN + pred$MT_II + pred$MT_IT + pred$MT_IS + pred$MT_ON + pred$MT_OI + pred$MT_OT + pred$MT_OS) / 9
 
 # Binarise ethnicity into "White" and "Non-white"
@@ -370,13 +370,6 @@ CVIplotB    <- ggplot(pred, aes(x = ALquantile, y = meanChoroidVascularity, fill
                theme(axis.text.y = element_blank(), legend.position = "left")
 CVIcombined <- grid.arrange(CVIplotA, CVIplotB, ncol = 2, nrow = 1, widths = c(0.45, 0.55), left = textGrob("Choroidal vascularity index", rot = 90, gp = gpar(fontsize = 16)))
 ggsave(file.path("manuscript", "figures", "CVIpre.png"), plot = CVIcombined, width = 14, height = 7)
-
-
-
-
-
-
-
 
 
 
