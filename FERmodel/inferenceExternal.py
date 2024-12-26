@@ -30,7 +30,7 @@ parser.add_argument("--dataFilePath",
 parser.add_argument("--outputFilePath", 
                     help    = "Full path to the output file",
                     type    = str, 
-                    default = join(root, "output", "RERtestPMprediction.csv"))
+                    default = join(root, "output", "SCOOBI_FER.csv"))
 parser.add_argument("--weightsDir", 
                     help    = "Name of directory where model checkpoint (weights) is saved",
                     type    = str, 
@@ -38,7 +38,7 @@ parser.add_argument("--weightsDir",
 parser.add_argument("--imageDir", 
                     help    = "Full path to the directory where input images are saved (set to 'None' if 'useRAP' is True",
                     type    = str, 
-                    default = join(os.path.dirname(root), "UKB_PM", "images", "full"))
+                    default = join(os.path.dirname(root), "SCOOBI", "fundus"))
 parser.add_argument("--TTA", 
                     help    = "Call if test-time augmentation is desired", 
                     action  = "store_true") 
