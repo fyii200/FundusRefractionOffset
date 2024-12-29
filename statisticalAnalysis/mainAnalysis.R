@@ -68,7 +68,7 @@ ggplot(subset(FERdata, type == "Test"), aes(x = overall_macular_thickness_baseli
 ggsave(file.path("manuscript", "figures", "supplementary", "MTdist.png"), width = 7, height = 5)
 
 # Exclude eyes failing OCT quality control
-excludeTestIds <- which(FERdata$type == "Test" & !FERdata$OCTgoodQualityBool)
+excludeTestIds <- which(FERdata$type == "Test" & (!FERdata$OCTgoodQualityBool | is.na(FERdata$overall_macular_thickness_baseline)))
 FERdata        <- FERdata[-excludeTestIds,] 
 
 # Eye-specific Pearson's correlation (FER vs SER)
@@ -378,4 +378,5 @@ CVIplotB    <- ggplot(pred, aes(x = ALquantile, y = meanChoroidVascularity, fill
                theme(axis.text.y = element_blank(), legend.position = "left")
 CVIcombined <- grid.arrange(CVIplotA, CVIplotB, ncol = 2, nrow = 1, widths = c(0.45, 0.55), left = textGrob("Choroidal vascularity index", rot = 90, gp = gpar(fontsize = 16)))
 ggsave(file.path("manuscript", "figures", "figure3pre.png"), plot = CVIcombined, width = 14, height = 7)
+
 
