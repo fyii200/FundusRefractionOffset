@@ -1,6 +1,6 @@
 #!/bin/bash  
 # Train script
-# Fabian Yii 25 Nov 2024
+# Fabian Yii 
 # fabian.yii@ed.ac.uk
 
 date
