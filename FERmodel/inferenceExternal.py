@@ -45,6 +45,10 @@ parser.add_argument("--TTA",
 parser.add_argument("--noPreprocess", 
                     help    = "Input images are NOT preprocessed if called (recommendation: do not call unless the images are already preprocessed)", 
                     action  = "store_false") 
+parser.add_argument("--fundusCroppedSize", 
+                    help    = "Desired size of the centre crop for the input fundus image (set to 0 if not desired)", 
+                    type    = int,
+                    default = 0) 
 args = parser.parse_args()
 
 
@@ -79,7 +83,7 @@ for j, name in tqdm(enumerate(names)):
                 predSER, predSER_TTA = model.predict(fundus            = fundus, 
                                                      foveaScan         = None,
                                                      preprocess        = args.noPreprocess, 
-                                                     fundusCroppedSize = None,
+                                                     fundusCroppedSize = args.fundusCroppedSize,
                                                      TTA               = args.TTA)
                 predSER              = predSER.flatten().cpu()
                 predSER_TTA          = predSER_TTA.flatten().cpu()
@@ -90,7 +94,7 @@ for j, name in tqdm(enumerate(names)):
                 predSER = model.predict(fundus            = fundus, 
                                         foveaScan         = None,
                                         preprocess        = args.noPreprocess, 
-                                        fundusCroppedSize = None,
+                                        fundusCroppedSize = args.fundusCroppedSize,
                                         TTA               = args.TTA)
                 predSER = predSER.flatten().cpu()
                 metrics["predSER"].append(predSER.detach().numpy()[0])            
