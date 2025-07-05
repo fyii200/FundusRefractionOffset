@@ -52,7 +52,7 @@ class trainedModel:
         self.model.to(self.device)
         self.model.eval()
 
-    def predict(self, fundus, foveaScan, preprocess = False, TTA = True, fundusCroppedSize = (1400,1400)):
+    def predict(self, fundus, foveaScan, preprocess = False, TTA = True, fundusCroppedSize = 0):
         """
         Args:
               fundus (4D tensor)               : Input fundus image of shape [B,H,W,C].
