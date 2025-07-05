@@ -70,7 +70,7 @@ class trainedModel:
                 crop   = CenterCrop(fundusCroppedSize)
                 fundus = crop(torch.as_tensor(fundus).moveaxis(2,0)).moveaxis(0,2).detach().numpy() 
                 
-            # Crop automatically if "croppedSize" is not provided
+            # Crop automatically if "croppedSize" is 0
             else:
                 yNonzero, xNonzero, _  = np.nonzero(fundus)
                 fundus                 = fundus[np.min(yNonzero):np.max(yNonzero), np.min(xNonzero):np.max(xNonzero)]            
