@@ -66,7 +66,7 @@ class trainedModel:
         
         if preprocess:
             # Centre crop fundus image to "croppedSize"
-            if fundusCroppedSize is not None:
+            if fundusCroppedSize != 0:
                 crop   = CenterCrop(fundusCroppedSize)
                 fundus = crop(torch.as_tensor(fundus).moveaxis(2,0)).moveaxis(0,2).detach().numpy() 
                 
