@@ -58,8 +58,7 @@ class trainedModel:
               fundus (4D tensor)               : Input fundus image of shape [B,H,W,C].
               preprocess (boolean)             : True if input needs to be preprocessed. 
               TTA (boolean)                    : True if test-time augmentation. 
-              fundusCroppedSize (tuple of int) : Desired size of the centre crop for UK Biobank fundus image (default to
-                                                 1400 by 1400 pixels to remove the black/empty border around the image).              
+              fundusCroppedSize (tuple of int) : Desired size of the centre crop for the input fundus image.              
         Out:
               score (int)  : predicted spherical equivalent refraction (SER).
         """
