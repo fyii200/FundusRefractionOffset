@@ -72,8 +72,15 @@ class trainedModel:
                 
             # Crop automatically if "croppedSize" is 0
             else:
-                yNonzero, xNonzero, _  = np.nonzero(fundus)
-                fundus                 = fundus[np.min(yNonzero):np.max(yNonzero), np.min(xNonzero):np.max(xNonzero)]            
+                # yNonzero, xNonzero, _  = np.nonzero(fundus)
+                # fundus                 = fundus[np.min(yNonzero):np.max(yNonzero), np.min(xNonzero):np.max(xNonzero)]            
+                gray       = cv.cvtColor(fundus, cv.COLOR_BGR2GRAY)
+                _,thresh   = cv.threshold(gray, 1, 255,cv.THRESH_BINARY)
+                contours,_ = cv.findContours(thresh,cv.RETR_EXTERNAL,cv.CHAIN_APPROX_SIMPLE)
+                ind        = 0 if len(contours) == 1 else [i for i, arr in enumerate(contours) if arr.shape[0] > min(gray.shape)][0]
+                x,y,w,h    = cv.boundingRect(contours[ind])
+                fundus     = fundus[y:y+h, x:x+w] 
+                print('Unsuaully small cropped image!') if fundus.shape[0] < 300 | fundus.shape[1] < 300 else None
                 
             # Resize input image to 512 by 512 pixels and normalise to [0-1] range
             fundus = cv.resize(fundus, (512,512), interpolation = cv.INTER_AREA)
