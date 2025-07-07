@@ -93,16 +93,19 @@ class trainedModel:
             if TTA:
                 fundusHorFlipped     = self.testHorFlip(fundus)
                 fundusCJ1            = self.cj1(fundus)
-                fundusCJ2            = self.cj2(fundus)                
+                fundusCJ1            = fundusCJ1/torch.max(fundusCJ1)
+                fundusCJ2            = self.cj2(fundus)
+                fundusCJ2            = fundusCJ2/torch.max(fundusCJ2)
+                
                 horFlippedSER        = self.model(x1 = fundusHorFlipped, x2 = None)    
-                cj1SER               = self.model(x1 = fundusCJ1, x2 = None)    
-                cj2SER               = self.model(x1 = fundusCJ2, x2 = None)    
+                CJ1SER               = self.model(x1 = fundusCJ1, x2 = None)    
+                CJ2SER               = self.model(x1 = fundusCJ2, x2 = None)    
                 rotatedSER1          = self.model(functional.rotate(fundus, -3), x2 = None)
                 rotatedSER2          = self.model(functional.rotate(fundus, 3), x2 = None)                  
                 rotatedSER3          = self.model(functional.rotate(fundus, -5), x2 = None)                  
                 rotatedSER4          = self.model(functional.rotate(fundus, 5), x2 = None)                                                  
                 # Average predictions
-                SER_TTA              = (oriSER + horFlippedSER + cj1SER + cj2SER + rotatedSER1 + rotatedSER2 + rotatedSER3 + rotatedSER4) / 8
+                SER_TTA              = (oriSER + horFlippedSER + CJ1SER + CJ2SER + rotatedSER1 + rotatedSER2 + rotatedSER3 + rotatedSER4) / 8
                 
                 return oriSER, SER_TTA
             
