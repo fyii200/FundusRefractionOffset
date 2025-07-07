@@ -96,7 +96,6 @@ class trainedModel:
                 fundusCJ1            = fundusCJ1/torch.max(fundusCJ1)
                 fundusCJ2            = self.cj2(fundus)
                 fundusCJ2            = fundusCJ2/torch.max(fundusCJ2)
-                
                 horFlippedSER        = self.model(x1 = fundusHorFlipped, x2 = None)    
                 CJ1SER               = self.model(x1 = fundusCJ1, x2 = None)    
                 CJ2SER               = self.model(x1 = fundusCJ2, x2 = None)    
