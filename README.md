@@ -1,6 +1,7 @@
-## This repository contains the source code for the following [work](https://jamanetwork.com/journals/jamaophthalmology/fullarticle/2834963):
+## This repository contains the source code for the following works: [LINK 1](https://jamanetwork.com/journals/jamaophthalmology/fullarticle/2834963) and [LINK 2](https://iovs.arvojournals.org/article.aspx?articleid=2803194)
 ```
-Yii F, MacCormick IJC, Strang N, Bernabeu MO, MacGillivray T. Fundus Refraction Offset as an Individualized myopia Biomarker. JAMA Ophthalmol. Published online June 5, 2025. doi:10.1001/jamaophthalmol.2025.1513.
+1. Yii F, MacCormick IJC, Strang N, Bernabeu MO, MacGillivray T. Fundus Refraction Offset as an Individualized myopia Biomarker. JAMA Ophthalmol. Published online June 5, 2025. doi:10.1001/jamaophthalmol.2025.1513
+2. Yii F, MacCormick IJC, Strang N, Bernabeu MO, MacGillivray T. Fundus Refraction Offset as a Personalized Biomarker 12-Year Risk of Retinal Detachment. Invest Ophthalmol Vis Sci. Published July 1, 2025. doi:10.1167/iovs.66.9.1 
 ```
 
 ### FERmodel
