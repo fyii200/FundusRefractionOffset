@@ -59,13 +59,13 @@ class fundusDataset(Dataset):
             elif self.dataFrame.eye.iloc[idx] == 'LE':
                 self.imageDir = join(os.sep, "mnt", "project", "Bulk", "Retinal Optical Coherence Tomography", "Fundus (left)", str(imageName[0:2]))
                 
-        try:        
+        if os.path.exists(join(self.imageDir, imageName)):
             # Read image
             imgPath = join(self.imageDir, imageName)
             image   = cv.imread(imgPath)
             # Fall back to the first image if an error occurs due to whatever reason (e.g. corrupted file)
-        except:
-            imgPath = join(os.sep, "mnt", "project", "Bulk", "Retinal Optical Coherence Tomography", "Fundus (right)", "1000749_21015_0_0.png")
+        else:
+            imgPath = join(os.sep, "mnt", "project", "Bulk", "Retinal Optical Coherence Tomography", "Fundus (left)", "10", "1000071_21015_0_0.png")
             image   = cv.imread(imgPath)
             print("Fall back to the first example because current file may be corrupted!")
             
