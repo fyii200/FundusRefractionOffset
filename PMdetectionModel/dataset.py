@@ -55,19 +55,24 @@ class fundusDataset(Dataset):
 
         if self.useRAP:
             if self.dataFrame.eye.iloc[idx] == 'RE':
-                self.imageDir = join(os.sep, "mnt", "project", "Bulk", "Retinal Optical Coherence Tomography", "Fundus (right)", str(imageName[0:2]))
+                self.imageDir = join(os.sep, "mnt", "project", "Bulk", 
+                                     "Retinal Optical Coherence Tomography", "Fundus (right)", str(imageName[0:2]))
             elif self.dataFrame.eye.iloc[idx] == 'LE':
-                self.imageDir = join(os.sep, "mnt", "project", "Bulk", "Retinal Optical Coherence Tomography", "Fundus (left)", str(imageName[0:2]))
+                self.imageDir = join(os.sep, "mnt", "project", "Bulk", 
+                                     "Retinal Optical Coherence Tomography", "Fundus (left)", str(imageName[0:2]))
                 
-        if os.path.exists(join(self.imageDir, imageName)):
-            # Read image
-            imgPath = join(self.imageDir, imageName)
-            image   = cv.imread(imgPath)
-            # Fall back to the first image if an error occurs due to whatever reason (e.g. corrupted file)
+            if os.path.exists(join(self.imageDir, imageName)):
+                imgPath = join(self.imageDir, imageName) 
+                # Fall back to the first image if an error occurs due to whatever reason (e.g. corrupted file)
+            else:
+                imgPath = join(os.sep, "mnt", "project", "Bulk", 
+                               "Retinal Optical Coherence Tomography", "Fundus (left)", "10", "1000071_21015_0_0.png")
+                print("Fall back to the first example because current file may be corrupted!")
         else:
-            imgPath = join(os.sep, "mnt", "project", "Bulk", "Retinal Optical Coherence Tomography", "Fundus (left)", "10", "1000071_21015_0_0.png")
-            image   = cv.imread(imgPath)
-            print("Fall back to the first example because current file may be corrupted!")
+            imgPath = join(self.imageDir, imageName)
+        
+        # Read image
+        image   = cv.imread(imgPath)
             
         # Convert from BGR to RGB
         image   = cv.cvtColor(image, cv.COLOR_BGR2RGB)
@@ -79,11 +84,10 @@ class fundusDataset(Dataset):
         # Preprocess input images: normalise to [0-1] range and reshaped from [H,W,C] into [C,H,W]
         image   = torch.tensor(np.uint8(image)).moveaxis(2, 0) 
         image   = image/255
-        
+         
+        # Return output    
         if self.inference:
-            
             return imageName, image
-
         else:
             # groundtruth label (binary)
             PMbinary = self.dataFrame.PMbinary_eyeLevel.iloc[idx]
@@ -92,7 +96,6 @@ class fundusDataset(Dataset):
             PMbinary = torch.tensor(np.float32(PMbinary)) 
             PMcategoryOneHot = torch.zeros(self.numClasses)
             PMcategoryOneHot[np.uint8(PMbinary)] = 1
-            
             return imageName, image, PMcategoryOneHot, PMbinary 
     
     
