@@ -70,7 +70,14 @@ class fundusDataset(Dataset):
                                  "Retinal Optical Coherence Tomography", "Fundus (left)", "10", "1000071_21015_0_0.png")
                 print("Fall back to the first example because current file may be corrupted!")
         else:
-            imgPath = join(self.imageDir, imageName)
+            if os.path.exists(join(self.imageDir, imageName)):
+                imgPath = join(self.imageDir, imageName) 
+                # Fall back to the first image if an error occurs due to whatever reason (e.g. corrupted file)
+            else:
+                imageName = "REMOVE"
+                imgPath   = join(os.sep, "mnt", "project", "Bulk", 
+                                 "Retinal Optical Coherence Tomography", "Fundus (left)", "10", "1000071_21015_0_0.png")
+                print("Fall back to the first example because current file may be corrupted!")
         
         # Read image
         image   = cv.imread(imgPath)
@@ -100,7 +107,6 @@ class fundusDataset(Dataset):
             return imageName, image, PMcategoryOneHot, PMbinary 
     
     
-
     
     
     
